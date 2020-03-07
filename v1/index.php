@@ -18,15 +18,21 @@
 				
 					$db = new DbOperation(); 
 					$record=$db->insertDeptDetails($_REQUEST['dname'], $_REQUEST['duname'], $_REQUEST['dpwd']);
-					if($record){
+					if($record == 1){
 							
-							//$response['error'] = false;
-						//$response['message'] = 'Department added successfully';
+						$response['error'] = false;
+						$response['message'] = 'Department register successfully';
 						
-						$response = $record;
+						//$response = $record;
+					}else if($record == 0){
+							
+						$response['error'] = true;
+						$response['message'] = 'Department is already register';
+						
+						//$response = $record;
 					}else{
 						$response['error'] = true;
-						$response['message'] = 'Could not add Department';
+						$response['message'] = 'Could not register department';
 					}
 				
 			break; 
@@ -34,19 +40,69 @@
 			//if it is getartist that means we are fetching the records
 			case 'getDept':
 				$db = new DbOperation();
-				$dept = $db->getDeptDetails($_GET['session_id']);
-				if(count($dept)<=0){
-					$response['error'] = true; 
-					$response['message'] = 'Nothing found in the database';
-				}else{
+				$dept1 = $db->getDeptDetails($_REQUEST['duname'],$_REQUEST['dpwd']);
+				
+				if($dept1 == 1){
 					$response['error'] = false; 
-					$response['dept'] = $dept;
+					$response['message'] = 'login successful';
+				}else
+				{
+					$response['error'] = true; 
+					$response['message'] = 'username or password is incorrect';
 				}
+			break; 
+			
+			case 'chnage':
+				
+					$db = new DbOperation(); 
+					$record=$db->changePassword($_REQUEST['old_pwd'], $_REQUEST['new_pwd']);
+					if(count($record)>0){
+							
+						$response['error'] = false;
+						$response['message'] = 'Password change successfully';
+						
+					}else{
+						$response['error'] = true;
+						$response['message'] = 'Could not change Password';
+					}
+				
+			break; 
+			
+			case 'addRes':
+				
+					$db = new DbOperation(); 
+					$record=$db->insertResDetails($_REQUEST['resname'],$_REQUEST['resqty'],$_REQUEST['resprice'], $_REQUEST['resbuydate']);
+					if(count($record)>0){
+							
+						$response['error'] = false;
+						$response['message'] = 'resources added successfully';
+						
+					}else{
+						$response['error'] = true;
+						$response['message'] = 'Could not add resources';
+					}
+				
+			break; 
+			
+			case 'addRoom':
+				
+					$db = new DbOperation(); 
+					$record=$db->insertRoomDetails($_REQUEST['roomname'],$_REQUEST['roomdesc']);
+					if(count($record)>0){
+							
+						$response['error'] = false;
+						$response['message'] = 'room added successfully';
+						
+					}else{
+						$response['error'] = true;
+						$response['message'] = 'Could not add room';
+					}
+				
 			break; 
 			
 			default:
 				$response['error'] = true;
-				$response['message'] = 'No operation to perform';
+				$response['message'] = 'Invalid Request';
 			
 		}
 		
